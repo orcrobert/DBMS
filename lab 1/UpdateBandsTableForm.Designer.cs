@@ -95,7 +95,7 @@
             addBandButton.UseVisualStyleBackColor = true;
             addBandButton.Click += addBandButton_Click;
             // 
-            // AddBand
+            // UpdateBandsTableForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -107,8 +107,8 @@
             Controls.Add(themeTb);
             Controls.Add(genreTb);
             Controls.Add(bandNameTb);
-            Name = "AddBand";
-            Text = "AddBand";
+            Name = "UpdateBandsTableForm";
+            Text = "Add Band";
             ResumeLayout(false);
             PerformLayout();
         }

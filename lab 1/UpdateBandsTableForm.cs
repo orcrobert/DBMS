@@ -24,7 +24,7 @@ namespace lab_1
         {
             InitializeComponent();
             this.operation = operation;
-            this.UpdateButtonText();
+            this.UpdateButtonFormText();
         }
 
         public UpdateBandsTableForm(string operation, int bandId, string bandName, string bandGenre, string bandTheme)
@@ -35,10 +35,10 @@ namespace lab_1
             this.bandGenre = bandGenre;
             this.bandTheme = bandTheme;
             this.bandId = bandId;
-            this.UpdateButtonText();
+            this.UpdateButtonFormText();
         }
 
-        private void UpdateButtonText()
+        private void UpdateButtonFormText()
         {
             if (this.operation == "add")
                 addBandButton.Text = "Add Band";
@@ -48,6 +48,7 @@ namespace lab_1
                 bandNameTb.Text = bandName;
                 genreTb.Text = bandGenre;
                 themeTb.Text = bandTheme;
+                this.Text = "Delete Band";
             }
             else if (this.operation == "update")
             {
@@ -55,6 +56,28 @@ namespace lab_1
                 bandNameTb.Text = bandName;
                 genreTb.Text = bandGenre;
                 themeTb.Text = bandTheme;
+                this.Text = "Update Band";
+            }
+        }
+
+        private void deleteFromMembers()
+        {
+            string query = "delete from Members where BandId = @BandId";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@BandId", this.bandId);
+
+            try
+            {
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error deleting from child table: " + ex.Message);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
@@ -71,6 +94,7 @@ namespace lab_1
             { 
                 query = "delete from Bands where BandName = @BandName and BandGenre = @BandGenre and BandTheme = @BandTheme";
                 successfullMessage = "Band deleted successfully";
+                deleteFromMembers();
             }
             if (this.operation == "update")
             {
@@ -95,6 +119,8 @@ namespace lab_1
                 if (rowsAffected > 0)
                 {
                     MessageBox.Show(successfullMessage);
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
                 else
                 {

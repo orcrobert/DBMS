@@ -22,8 +22,14 @@ namespace lab_1
 
         private void showBandsButton_Click(object sender, EventArgs e)
         {
-            string query = "select * from Bands";
+            showBands();
+        }
 
+        private void showBands()
+        {
+            dataGridView1.DataSource = null;
+
+            string query = "select * from Bands";
             SqlCommand cmd = new SqlCommand(query, conn);
 
             da.SelectCommand = cmd;
@@ -31,9 +37,15 @@ namespace lab_1
             da.Fill(ds, "Bands");
 
             dataGridView1.DataSource = ds.Tables["Bands"];
+            dataGridView1.Refresh();
         }
 
         private void showMembersButton_Click(object sender, EventArgs e)
+        {
+            showMembers();
+        }
+
+        private void showMembers()
         {
             DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
             var selectedBandId = selectedRow.Cells["BandId"].Value;
@@ -73,6 +85,7 @@ namespace lab_1
             string operation = "add";
             UpdateBandsTableForm form = new UpdateBandsTableForm(operation);
             form.ShowDialog();
+            showBands();
         }
 
         private void deleteBandButton_Click(object sender, EventArgs e)
@@ -88,6 +101,7 @@ namespace lab_1
 
             UpdateBandsTableForm form = new UpdateBandsTableForm(operation, bandId, bandName, bandGenre, bandTheme);
             form.ShowDialog();
+            showBands();
         }
 
         private void updateBandButton_Click(object sender, EventArgs e)
@@ -102,6 +116,7 @@ namespace lab_1
 
             UpdateBandsTableForm form = new UpdateBandsTableForm(operation, bandId, bandName, bandGenre, bandTheme);
             form.ShowDialog();
+            showBands();
         }
     }
 }
