@@ -67,8 +67,8 @@ namespace lab_1
             ds.Clear();
             da.Fill(ds, "Members");
 
-
             dataGridView1.DataSource = ds.Tables["Members"];
+            dataGridView1.Refresh();
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
