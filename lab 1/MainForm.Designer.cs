@@ -34,6 +34,11 @@
             addBandButton = new Button();
             deleteBandButton = new Button();
             updateBandButton = new Button();
+            label1 = new Label();
+            label2 = new Label();
+            addMemberButton = new Button();
+            deleteMemberButton = new Button();
+            updateMemberButton = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -68,7 +73,7 @@
             // 
             // addBandButton
             // 
-            addBandButton.Location = new Point(12, 352);
+            addBandButton.Location = new Point(12, 371);
             addBandButton.Name = "addBandButton";
             addBandButton.Size = new Size(75, 23);
             addBandButton.TabIndex = 3;
@@ -78,7 +83,7 @@
             // 
             // deleteBandButton
             // 
-            deleteBandButton.Location = new Point(116, 352);
+            deleteBandButton.Location = new Point(116, 371);
             deleteBandButton.Name = "deleteBandButton";
             deleteBandButton.Size = new Size(87, 23);
             deleteBandButton.TabIndex = 4;
@@ -88,7 +93,7 @@
             // 
             // updateBandButton
             // 
-            updateBandButton.Location = new Point(230, 352);
+            updateBandButton.Location = new Point(230, 371);
             updateBandButton.Name = "updateBandButton";
             updateBandButton.Size = new Size(87, 23);
             updateBandButton.TabIndex = 5;
@@ -96,22 +101,75 @@
             updateBandButton.UseVisualStyleBackColor = true;
             updateBandButton.Click += updateBandButton_Click;
             // 
-            // Form1
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(12, 344);
+            label1.Name = "label1";
+            label1.Size = new Size(111, 17);
+            label1.TabIndex = 6;
+            label1.Text = "Band Operations";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(12, 416);
+            label2.Name = "label2";
+            label2.Size = new Size(131, 17);
+            label2.TabIndex = 7;
+            label2.Text = "Member Operations";
+            // 
+            // addMemberButton
+            // 
+            addMemberButton.Location = new Point(12, 446);
+            addMemberButton.Name = "addMemberButton";
+            addMemberButton.Size = new Size(86, 23);
+            addMemberButton.TabIndex = 8;
+            addMemberButton.Text = "Add Member";
+            addMemberButton.UseVisualStyleBackColor = true;
+            // 
+            // deleteMemberButton
+            // 
+            deleteMemberButton.Location = new Point(116, 446);
+            deleteMemberButton.Name = "deleteMemberButton";
+            deleteMemberButton.Size = new Size(97, 23);
+            deleteMemberButton.TabIndex = 9;
+            deleteMemberButton.Text = "Delete Member";
+            deleteMemberButton.UseVisualStyleBackColor = true;
+            // 
+            // updateMemberButton
+            // 
+            updateMemberButton.Location = new Point(230, 446);
+            updateMemberButton.Name = "updateMemberButton";
+            updateMemberButton.Size = new Size(97, 23);
+            updateMemberButton.TabIndex = 10;
+            updateMemberButton.Text = "Update Member";
+            updateMemberButton.UseVisualStyleBackColor = true;
+            // 
+            // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(568, 498);
+            Controls.Add(updateMemberButton);
+            Controls.Add(deleteMemberButton);
+            Controls.Add(addMemberButton);
+            Controls.Add(label2);
+            Controls.Add(label1);
             Controls.Add(updateBandButton);
             Controls.Add(deleteBandButton);
             Controls.Add(addBandButton);
             Controls.Add(showMembersButton);
             Controls.Add(showBandsButton);
             Controls.Add(dataGridView1);
-            Name = "Form1";
+            Name = "MainForm";
             Text = "Form1";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -122,5 +180,10 @@
         private Button addBandButton;
         private Button deleteBandButton;
         private Button updateBandButton;
+        private Label label1;
+        private Label label2;
+        private Button addMemberButton;
+        private Button deleteMemberButton;
+        private Button updateMemberButton;
     }
 }

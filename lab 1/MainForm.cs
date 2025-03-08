@@ -9,20 +9,25 @@ namespace lab_1
         SqlDataAdapter da = new SqlDataAdapter();
         DataSet ds = new DataSet();
 
+        private string currentTable = "Bands";
+
         public MainForm()
         {
             InitializeComponent();
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            showMembersButton.Enabled = false;
-            deleteBandButton.Enabled = false;
-            updateBandButton.Enabled = false;
         }
 
-        private void Form1_Load(object sender, EventArgs e) { }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            showBands();
+            updateButtonEnablement();
+        }
 
         private void showBandsButton_Click(object sender, EventArgs e)
         {
             showBands();
+            currentTable = "Bands";
+            updateButtonEnablement();
         }
 
         private void showBands()
@@ -43,6 +48,8 @@ namespace lab_1
         private void showMembersButton_Click(object sender, EventArgs e)
         {
             showMembers();
+            currentTable = "Members";
+            updateButtonEnablement();
         }
 
         private void showMembers()
@@ -66,17 +73,44 @@ namespace lab_1
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count != 0)
+            updateButtonEnablement();
+        }
+
+        private void updateButtonEnablement()
+        {
+            if (currentTable == "Bands")
             {
-                showMembersButton.Enabled = true;
-                deleteBandButton.Enabled = true;
-                updateBandButton.Enabled = true;
-            }
-            else
-            {
-                showMembersButton.Enabled = false;
-                deleteBandButton.Enabled = false;
+                addBandButton.Enabled = true;
                 updateBandButton.Enabled = false;
+                deleteBandButton.Enabled = false;
+                showMembersButton.Enabled = false;
+                addMemberButton.Enabled = false;
+                deleteMemberButton.Enabled = false;
+                updateMemberButton.Enabled = false;
+
+                if (dataGridView1.SelectedRows.Count != 0)
+                {
+                    updateBandButton.Enabled = true;
+                    deleteBandButton.Enabled = true;
+                    showMembersButton.Enabled = true;
+                }
+            }
+            else if (currentTable == "Members")
+            {
+                addBandButton.Enabled = false;
+                updateBandButton.Enabled = false;
+                deleteBandButton.Enabled = false;
+                showMembersButton.Enabled = true;
+                addMemberButton.Enabled = true;
+                deleteMemberButton.Enabled = false;
+                updateMemberButton.Enabled = false;
+
+                if (dataGridView1.SelectedRows.Count != 0)
+                {
+                    addMemberButton.Enabled = true;
+                    deleteMemberButton.Enabled = true;
+                    updateMemberButton.Enabled = true;
+                }
             }
         }
 
@@ -84,6 +118,7 @@ namespace lab_1
         {
             string operation = "add";
             UpdateBandsTableForm form = new UpdateBandsTableForm(operation);
+
             form.ShowDialog();
             showBands();
         }
@@ -100,6 +135,7 @@ namespace lab_1
             var bandTheme = selectedRow.Cells[3].Value.ToString();
 
             UpdateBandsTableForm form = new UpdateBandsTableForm(operation, bandId, bandName, bandGenre, bandTheme);
+
             form.ShowDialog();
             showBands();
         }
@@ -115,6 +151,7 @@ namespace lab_1
             var bandTheme = selectedRow.Cells[3].Value.ToString();
 
             UpdateBandsTableForm form = new UpdateBandsTableForm(operation, bandId, bandName, bandGenre, bandTheme);
+
             form.ShowDialog();
             showBands();
         }

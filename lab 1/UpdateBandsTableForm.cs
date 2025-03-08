@@ -85,6 +85,7 @@ namespace lab_1
         {
             string query = "";
             string successfullMessage = "";
+
             if (this.operation == "add")
             {
                 query = "insert into Bands (BandName, BandGenre, BandTheme) values (@BandName, @BandGenre, @BandTheme)";
@@ -106,6 +107,7 @@ namespace lab_1
             cmd.Parameters.AddWithValue("@BandName", bandNameTb.Text);
             cmd.Parameters.AddWithValue("@BandGenre", genreTb.Text);
             cmd.Parameters.AddWithValue("@BandTheme", themeTb.Text);
+
             if (this.operation == "update" || this.operation == "delete")
             {
                 cmd.Parameters.AddWithValue("@BandId", this.bandId);
