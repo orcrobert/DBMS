@@ -83,6 +83,12 @@ namespace lab_1
 
         private void addBandButton_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(bandNameTb.Text) || string.IsNullOrWhiteSpace(genreTb.Text) || string.IsNullOrWhiteSpace(themeTb.Text))
+            {
+                MessageBox.Show("Please fill in all the fields.");
+                return;
+            }
+
             string query = "";
             string successfullMessage = "";
 

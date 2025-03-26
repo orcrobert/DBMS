@@ -22,6 +22,7 @@ namespace lab_1
         public UpdateMembersTableForm(string operation, int bandId)
         {
             InitializeComponent();
+
             this.operation = operation;
             this.bandId = bandId;
             this.UpdateButtonFormText();
@@ -65,6 +66,12 @@ namespace lab_1
 
         private void updateButton_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(nameTextBox.Text) || string.IsNullOrWhiteSpace(instrumentTextBox.Text))
+            {
+                MessageBox.Show("Please fill in all the fields.");
+                return;
+            }
+
             string query = "";
             string successfullMessage = "";
 

@@ -8,7 +8,6 @@ namespace lab_1
         SqlConnection conn = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Robert\\Documents\\Metal.mdf;Integrated Security=True;Connect Timeout=30;");
         SqlDataAdapter da = new SqlDataAdapter();
         DataSet ds = new DataSet();
-
         private string currentTable = "Bands";
 
         public MainForm()
@@ -34,7 +33,7 @@ namespace lab_1
         {
             dataGridView1.DataSource = null;
 
-            string query = "select * from Bands";
+            string query = "SELECT * FROM Bands";
             SqlCommand cmd = new SqlCommand(query, conn);
 
             da.SelectCommand = cmd;
@@ -47,28 +46,37 @@ namespace lab_1
 
         private void showMembersButton_Click(object sender, EventArgs e)
         {
-            showMembers();
+            showMembers(-1);
             currentTable = "Members";
             updateButtonEnablement();
         }
 
-        private void showMembers()
+        private void showMembers(int tempBandId)
         {
-            DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
-            var selectedBandId = selectedRow.Cells["BandId"].Value;
+            if (dataGridView1.SelectedRows.Count == 0 && tempBandId == -1)
+            {
+                MessageBox.Show("No band selected.");
+                return;
+            }
 
-            dataGridView1.Columns.Clear();
+            int selectedBandId = (tempBandId == -1)
+                ? Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[0].Value)
+                : tempBandId;
 
-            string query = "select * from Members where BandId = @BandId";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@BandId", selectedBandId);
+            dataGridView1.DataSource = null;
 
-            da.SelectCommand = cmd;
-            ds.Clear();
-            da.Fill(ds, "Members");
+            string query = "SELECT * FROM Members WHERE BandId = @BandId";
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@BandId", selectedBandId);
 
+                da.SelectCommand = cmd;
+                ds.Clear();
+                da.Fill(ds, "Members");
 
-            dataGridView1.DataSource = ds.Tables["Members"];
+                dataGridView1.DataSource = ds.Tables["Members"];
+                dataGridView1.Refresh();
+            }
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -81,19 +89,12 @@ namespace lab_1
             if (currentTable == "Bands")
             {
                 addBandButton.Enabled = true;
-                updateBandButton.Enabled = false;
-                deleteBandButton.Enabled = false;
-                showMembersButton.Enabled = false;
+                updateBandButton.Enabled = dataGridView1.SelectedRows.Count > 0;
+                deleteBandButton.Enabled = dataGridView1.SelectedRows.Count > 0;
+                showMembersButton.Enabled = dataGridView1.SelectedRows.Count > 0;
                 addMemberButton.Enabled = false;
                 deleteMemberButton.Enabled = false;
                 updateMemberButton.Enabled = false;
-
-                if (dataGridView1.SelectedRows.Count != 0)
-                {
-                    updateBandButton.Enabled = true;
-                    deleteBandButton.Enabled = true;
-                    showMembersButton.Enabled = true;
-                }
             }
             else if (currentTable == "Members")
             {
@@ -101,32 +102,21 @@ namespace lab_1
                 updateBandButton.Enabled = false;
                 deleteBandButton.Enabled = false;
                 showMembersButton.Enabled = true;
-                addMemberButton.Enabled = true;
-                deleteMemberButton.Enabled = false;
-                updateMemberButton.Enabled = false;
-
-                if (dataGridView1.SelectedRows.Count != 0)
-                {
-                    addMemberButton.Enabled = true;
-                    deleteMemberButton.Enabled = true;
-                    updateMemberButton.Enabled = true;
-                }
+                addMemberButton.Enabled = dataGridView1.Rows.Count > 0;
+                deleteMemberButton.Enabled = dataGridView1.SelectedRows.Count > 0;
+                updateMemberButton.Enabled = dataGridView1.SelectedRows.Count > 0;
             }
         }
 
         private void addBandButton_Click(object sender, EventArgs e)
         {
-            string operation = "add";
-            UpdateBandsTableForm form = new UpdateBandsTableForm(operation);
-
+            UpdateBandsTableForm form = new UpdateBandsTableForm("add");
             form.ShowDialog();
             showBands();
         }
 
         private void deleteBandButton_Click(object sender, EventArgs e)
         {
-            string operation = "delete";
-
             DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
 
             var bandId = Convert.ToInt32(selectedRow.Cells[0].Value);
@@ -134,15 +124,13 @@ namespace lab_1
             var bandGenre = selectedRow.Cells[2].Value.ToString();
             var bandTheme = selectedRow.Cells[3].Value.ToString();
 
-            UpdateBandsTableForm form = new UpdateBandsTableForm(operation, bandId, bandName, bandGenre, bandTheme);
-
+            UpdateBandsTableForm form = new UpdateBandsTableForm("delete", bandId, bandName, bandGenre, bandTheme);
             form.ShowDialog();
             showBands();
         }
 
         private void updateBandButton_Click(object sender, EventArgs e)
         {
-            string operation = "update";
             DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
 
             var bandId = Convert.ToInt32(selectedRow.Cells[0].Value);
@@ -150,29 +138,23 @@ namespace lab_1
             var bandGenre = selectedRow.Cells[2].Value.ToString();
             var bandTheme = selectedRow.Cells[3].Value.ToString();
 
-            UpdateBandsTableForm form = new UpdateBandsTableForm(operation, bandId, bandName, bandGenre, bandTheme);
-
+            UpdateBandsTableForm form = new UpdateBandsTableForm("update", bandId, bandName, bandGenre, bandTheme);
             form.ShowDialog();
             showBands();
         }
 
         private void addMemberButton_Click(object sender, EventArgs e)
         {
-            string operation = "add";
-
             DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
-            var bandId = Convert.ToInt32(selectedRow.Cells[1].Value);
+            var bandId = Convert.ToInt32(selectedRow.Cells[0].Value);
 
-            UpdateMembersTableForm form = new UpdateMembersTableForm(operation, bandId);
+            UpdateMembersTableForm form = new UpdateMembersTableForm("add", bandId);
             form.ShowDialog();
-
-            showMembers();
+            showMembers(bandId);
         }
 
         private void deleteMemberButton_Click(object sender, EventArgs e)
         {
-            string operation = "delete";
-
             DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
 
             var memberId = Convert.ToInt32(selectedRow.Cells[0].Value);
@@ -180,16 +162,13 @@ namespace lab_1
             var memberName = selectedRow.Cells[2].Value.ToString();
             var memberInstrument = selectedRow.Cells[3].Value.ToString();
 
-            UpdateMembersTableForm form = new UpdateMembersTableForm(operation, memberId, bandId, memberName, memberInstrument);
-
+            UpdateMembersTableForm form = new UpdateMembersTableForm("delete", memberId, bandId, memberName, memberInstrument);
             form.ShowDialog();
-            showMembers();
+            showMembers(bandId);
         }
 
         private void updateMemberButton_Click(object sender, EventArgs e)
         {
-            string operation = "update";
-
             DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
 
             var memberId = Convert.ToInt32(selectedRow.Cells[0].Value);
@@ -197,10 +176,9 @@ namespace lab_1
             var memberName = selectedRow.Cells[2].Value.ToString();
             var memberInstrument = selectedRow.Cells[3].Value.ToString();
 
-            UpdateMembersTableForm form = new UpdateMembersTableForm(operation, memberId, bandId, memberName, memberInstrument);
-
+            UpdateMembersTableForm form = new UpdateMembersTableForm("update", memberId, bandId, memberName, memberInstrument);
             form.ShowDialog();
-            showMembers();
+            showMembers(bandId);
         }
     }
 }
