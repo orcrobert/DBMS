@@ -129,6 +129,7 @@
             addMemberButton.TabIndex = 8;
             addMemberButton.Text = "Add Member";
             addMemberButton.UseVisualStyleBackColor = true;
+            addMemberButton.Click += addMemberButton_Click;
             // 
             // deleteMemberButton
             // 
@@ -138,6 +139,7 @@
             deleteMemberButton.TabIndex = 9;
             deleteMemberButton.Text = "Delete Member";
             deleteMemberButton.UseVisualStyleBackColor = true;
+            deleteMemberButton.Click += deleteMemberButton_Click;
             // 
             // updateMemberButton
             // 
@@ -147,6 +149,7 @@
             updateMemberButton.TabIndex = 10;
             updateMemberButton.Text = "Update Member";
             updateMemberButton.UseVisualStyleBackColor = true;
+            updateMemberButton.Click += updateMemberButton_Click;
             // 
             // MainForm
             // 

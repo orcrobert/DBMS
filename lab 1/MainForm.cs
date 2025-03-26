@@ -155,5 +155,52 @@ namespace lab_1
             form.ShowDialog();
             showBands();
         }
+
+        private void addMemberButton_Click(object sender, EventArgs e)
+        {
+            string operation = "add";
+
+            DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
+            var bandId = Convert.ToInt32(selectedRow.Cells[1].Value);
+
+            UpdateMembersTableForm form = new UpdateMembersTableForm(operation, bandId);
+            form.ShowDialog();
+
+            showMembers();
+        }
+
+        private void deleteMemberButton_Click(object sender, EventArgs e)
+        {
+            string operation = "delete";
+
+            DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
+
+            var memberId = Convert.ToInt32(selectedRow.Cells[0].Value);
+            var bandId = Convert.ToInt32(selectedRow.Cells[1].Value);
+            var memberName = selectedRow.Cells[2].Value.ToString();
+            var memberInstrument = selectedRow.Cells[3].Value.ToString();
+
+            UpdateMembersTableForm form = new UpdateMembersTableForm(operation, memberId, bandId, memberName, memberInstrument);
+
+            form.ShowDialog();
+            showMembers();
+        }
+
+        private void updateMemberButton_Click(object sender, EventArgs e)
+        {
+            string operation = "update";
+
+            DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
+
+            var memberId = Convert.ToInt32(selectedRow.Cells[0].Value);
+            var bandId = Convert.ToInt32(selectedRow.Cells[1].Value);
+            var memberName = selectedRow.Cells[2].Value.ToString();
+            var memberInstrument = selectedRow.Cells[3].Value.ToString();
+
+            UpdateMembersTableForm form = new UpdateMembersTableForm(operation, memberId, bandId, memberName, memberInstrument);
+
+            form.ShowDialog();
+            showMembers();
+        }
     }
 }
