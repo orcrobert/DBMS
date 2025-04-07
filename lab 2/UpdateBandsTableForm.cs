@@ -19,15 +19,19 @@ namespace lab_1
         private string operation;
         private string bandName, bandGenre, bandTheme;
         private int bandId;
+        private string addCommand;
+        private string updateCommand;
 
-        public UpdateBandsTableForm(string operation)
+        public UpdateBandsTableForm(string operation, string addCommand = null, string updateCommand = null)
         {
             InitializeComponent();
             this.operation = operation;
+            this.addCommand = addCommand;
+            this.updateCommand = updateCommand;
             this.UpdateButtonFormText();
         }
 
-        public UpdateBandsTableForm(string operation, int bandId, string bandName, string bandGenre, string bandTheme)
+        public UpdateBandsTableForm(string operation, int bandId, string bandName, string bandGenre, string bandTheme, string updateCommand = null)
         {
             InitializeComponent();
             this.operation = operation;
@@ -35,6 +39,7 @@ namespace lab_1
             this.bandGenre = bandGenre;
             this.bandTheme = bandTheme;
             this.bandId = bandId;
+            this.updateCommand = updateCommand;
             this.UpdateButtonFormText();
         }
 
@@ -94,18 +99,18 @@ namespace lab_1
 
             if (this.operation == "add")
             {
-                query = "insert into Bands (BandName, BandGenre, BandTheme) values (@BandName, @BandGenre, @BandTheme)";
+                query = this.addCommand;
                 successfullMessage = "Band added successfully";
             }
-            if (this.operation == "delete") 
-            { 
-                query = "delete from Bands where BandName = @BandName and BandGenre = @BandGenre and BandTheme = @BandTheme";
+            if (this.operation == "delete")
+            {
+                query = "delete from Bands where BandId = @BandId";
                 successfullMessage = "Band deleted successfully";
                 deleteFromMembers();
             }
             if (this.operation == "update")
             {
-                query = "update Bands set BandName = @BandName, BandGenre = @BandGenre, BandTheme = @BandTheme where BandId = @BandId";
+                query = this.updateCommand;
                 successfullMessage = "Band updated successfully";
             }
 

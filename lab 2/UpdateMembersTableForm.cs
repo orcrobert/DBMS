@@ -18,17 +18,23 @@ namespace lab_1
         private int memberId, bandId;
 
         SqlConnection conn = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Robert\\Documents\\Metal.mdf;Integrated Security=True;Connect Timeout=30;");
+        private string addCommand;
+        private string updateCommand;
+        private string deleteCommand;
 
-        public UpdateMembersTableForm(string operation, int bandId)
+        public UpdateMembersTableForm(string operation, int bandId, string addCommand = null, string updateCommand = null, string deleteCommand = null)
         {
             InitializeComponent();
 
             this.operation = operation;
             this.bandId = bandId;
+            this.addCommand = addCommand;
+            this.updateCommand = updateCommand;
+            this.deleteCommand = deleteCommand;
             this.UpdateButtonFormText();
         }
 
-        public UpdateMembersTableForm(string operation, int memberId, int bandId, string name, string instrument)
+        public UpdateMembersTableForm(string operation, int memberId, int bandId, string name, string instrument, string updateCommand = null, string deleteCommand = null)
         {
             InitializeComponent();
 
@@ -38,6 +44,8 @@ namespace lab_1
             this.instrument = instrument;
             this.memberId = memberId;
             this.operation = operation;
+            this.updateCommand = updateCommand;
+            this.deleteCommand = deleteCommand;
             this.UpdateButtonFormText();
         }
 
@@ -77,17 +85,17 @@ namespace lab_1
 
             if (this.operation == "add")
             {
-                query = "insert into Members (BandId, MemberName, MemberInstrument) values (@BandId, @MemberName, @MemberInstrument)";
+                query = this.addCommand;
                 successfullMessage = "Member added successfully!";
             }
             else if (this.operation == "delete")
             {
-                query = "delete from Members where BandId = @BandId and MemberId = @MemberId";
+                query = this.deleteCommand;
                 successfullMessage = "Member deleted successfully!";
             }
             else if (this.operation == "update")
             {
-                query = "update Members set MemberName = @MemberName, MemberInstrument = @MemberInstrument where MemberId = @MemberId";
+                query = this.updateCommand;
                 successfullMessage = "Member updated successfully!";
             }
 
