@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+  <Scenario name="BandsAndMembers">
+    <FormCaption>Bands and Their Members</FormCaption>
+    <MasterTable>
+      <Name>Bands</Name>
+      <PrimaryKeyColumn>BandId</PrimaryKeyColumn>
+      <SelectQuery>SELECT * FROM Bands</SelectQuery>
+      <AddCommand>INSERT INTO Bands (BandName, BandGenre, BandTheme) VALUES (@BandName, @Genre, @Theme)</AddCommand>
+      <UpdateCommand>UPDATE Bands SET BandName = @BandName, BandGenre = @Genre, BandTheme = @Theme WHERE BandId = @BandId</UpdateCommand>
+      <DeleteCommand>DELETE FROM Bands WHERE BandId = @BandId</DeleteCommand>
+    </MasterTable>
+    <DetailTable>
+      <Name>Members</Name>
+      <ForeignKeyColumn>BandId</ForeignKeyColumn>
+      <SelectQuery>SELECT * FROM Members WHERE BandId = @MasterId</SelectQuery>
+      <AddCommand>INSERT INTO Members (BandId, MemberName, MemberInstrument) VALUES (@BandId, @MemberName, @Instrument)</AddCommand>
+      <UpdateCommand>UPDATE Members SET MemberName = @MemberName, MemberInstrument = @Instrument WHERE MemberId = @MemberId</UpdateCommand>
+      <DeleteCommand>DELETE FROM Members WHERE MemberId = @MemberId</DeleteCommand>
+    </DetailTable>
+  </Scenario>
+</Configuration>
