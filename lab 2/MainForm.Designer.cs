@@ -39,6 +39,7 @@
             addMemberButton = new Button();
             deleteMemberButton = new Button();
             updateMemberButton = new Button();
+            scenarioComboBox = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -151,11 +152,21 @@
             updateMemberButton.UseVisualStyleBackColor = true;
             updateMemberButton.Click += updateMemberButton_Click;
             // 
+            // scenarioComboBox
+            // 
+            scenarioComboBox.FormattingEnabled = true;
+            scenarioComboBox.Location = new Point(429, 12);
+            scenarioComboBox.Name = "scenarioComboBox";
+            scenarioComboBox.Size = new Size(121, 23);
+            scenarioComboBox.TabIndex = 11;
+            scenarioComboBox.SelectedIndexChanged += scenarioComboBox_SelectedIndexChanged;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(568, 498);
+            Controls.Add(scenarioComboBox);
             Controls.Add(updateMemberButton);
             Controls.Add(deleteMemberButton);
             Controls.Add(addMemberButton);
@@ -188,5 +199,6 @@
         private Button addMemberButton;
         private Button deleteMemberButton;
         private Button updateMemberButton;
+        private ComboBox scenarioComboBox;
     }
 }

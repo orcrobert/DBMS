@@ -19,4 +19,25 @@
       <DeleteCommand>DELETE FROM Members WHERE MemberId = @MemberId</DeleteCommand>
     </DetailTable>
   </Scenario>
+
+  <Scenario name="BandsAndAlbums">
+    <FormCaption>Bands and Their Albums</FormCaption>
+    <MasterTable>
+      <Name>Bands</Name>
+      <PrimaryKeyColumn>BandId</PrimaryKeyColumn>
+      <SelectQuery>SELECT * FROM Bands</SelectQuery>
+      <AddCommand>INSERT INTO Bands (BandName, BandGenre, BandTheme) VALUES (@BandName, @BandGenre, @BandTheme)</AddCommand>
+      <UpdateCommand>UPDATE Bands SET BandName = @BandName, BandGenre = @BandGenre, BandTheme = @BandTheme WHERE BandId = @BandId</UpdateCommand>
+      <DeleteCommand>DELETE FROM Bands WHERE BandId = @BandId</DeleteCommand>
+    </MasterTable>
+    <DetailTable>
+      <Name>Albums</Name>
+      <PrimaryKeyColumn>AlbumId</PrimaryKeyColumn>
+      <ForeignKeyColumn>BandId</ForeignKeyColumn>
+      <SelectQuery>SELECT AlbumId, AlbumName, ReleaseDate, Genre FROM Albums WHERE BandId = @MasterId</SelectQuery>
+      <AddCommand>INSERT INTO Albums (BandId, AlbumName, ReleaseDate, Genre) VALUES (@BandId, @AlbumName, @ReleaseDate, @Genre)</AddCommand>
+      <UpdateCommand>UPDATE Albums SET AlbumName = @AlbumName, ReleaseDate = @ReleaseDate, Genre = @Genre WHERE AlbumId = @AlbumId</UpdateCommand>
+      <DeleteCommand>DELETE FROM Albums WHERE AlbumId = @AlbumId</DeleteCommand>
+    </DetailTable>
+  </Scenario>
 </Configuration>

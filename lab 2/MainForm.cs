@@ -45,13 +45,42 @@ namespace lab_1
             try
             {
                 config.Load("MasterDetailConfig.xml");
-                LoadScenario(currentScenarioName);
+                XmlNodeList scenarioNodes = config.SelectNodes("Configuration/Scenario");
+                if (scenarioNodes != null)
+                {
+                    scenarioComboBox.Items.Clear();
+                    foreach (XmlNode scenarioNode in scenarioNodes)
+                    {
+                        string scenarioName = scenarioNode.Attributes["name"]?.Value;
+                        if (!string.IsNullOrEmpty(scenarioName))
+                        {
+                            scenarioComboBox.Items.Add(scenarioName);
+                        }
+                    }
+                    if (scenarioComboBox.Items.Contains(currentScenarioName))
+                    {
+                        scenarioComboBox.SelectedItem = currentScenarioName;
+                    }
+                    else if (scenarioComboBox.Items.Count > 0)
+                    {
+                        scenarioComboBox.SelectedIndex = 0;
+                    }
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading configuration file: {ex.Message}", "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             updateButtonEnablement();
+        }
+
+        private void scenarioComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (scenarioComboBox.SelectedItem != null)
+            {
+                currentScenarioName = scenarioComboBox.SelectedItem.ToString();
+                LoadScenario(currentScenarioName);
+            }
         }
 
         private void LoadScenario(string scenarioName)
@@ -79,6 +108,11 @@ namespace lab_1
                     masterAddCommand = masterTableNode.SelectSingleNode("AddCommand")?.InnerText;
                     masterUpdateCommand = masterTableNode.SelectSingleNode("UpdateCommand")?.InnerText;
                     masterDeleteCommand = masterTableNode.SelectSingleNode("DeleteCommand")?.InnerText;
+
+                    string masterEntity = masterTableName.Substring(0, masterTableName.Length - 1);
+                    addBandButton.Text = $"Add New {masterEntity}";
+                    updateBandButton.Text = $"Update {masterEntity}";
+                    deleteBandButton.Text = $"Delete {masterEntity}";
                 }
 
                 var detailTableNode = currentScenarioNode.SelectSingleNode("DetailTable");
@@ -90,6 +124,21 @@ namespace lab_1
                     detailAddCommand = detailTableNode.SelectSingleNode("AddCommand")?.InnerText;
                     detailUpdateCommand = detailTableNode.SelectSingleNode("UpdateCommand")?.InnerText;
                     detailDeleteCommand = detailTableNode.SelectSingleNode("DeleteCommand")?.InnerText;
+
+                    if (scenarioName == "BandsAndMembers")
+                    {
+                        showMembersButton.Text = "Show Members";
+                        addMemberButton.Text = "Add New Member";
+                        deleteMemberButton.Text = "Delete Member";
+                        updateMemberButton.Text = "Update Member";
+                    }
+                    else if (scenarioName == "BandsAndAlbums")
+                    {
+                        showMembersButton.Text = "Show Albums";
+                        addMemberButton.Text = "Add New Album";
+                        deleteMemberButton.Text = "Delete Album";
+                        updateMemberButton.Text = "Update Album";
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(masterTableName))
