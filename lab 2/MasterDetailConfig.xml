@@ -1,43 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
+  
   <Scenario name="BandsAndMembers">
-    <FormCaption>Bands and Their Members</FormCaption>
+    <FormCaption>Bands and Members</FormCaption>
     <MasterTable>
       <Name>Bands</Name>
       <PrimaryKeyColumn>BandId</PrimaryKeyColumn>
-      <SelectQuery>SELECT * FROM Bands</SelectQuery>
-      <AddCommand>INSERT INTO Bands (BandName, BandGenre, BandTheme) VALUES (@BandName, @Genre, @Theme)</AddCommand>
-      <UpdateCommand>UPDATE Bands SET BandName = @BandName, BandGenre = @Genre, BandTheme = @Theme WHERE BandId = @BandId</UpdateCommand>
+      <SelectQuery>SELECT BandId, BandName, BandGenre, BandTheme FROM Bands</SelectQuery>
+      <AddCommand>INSERT INTO Bands (BandName, BandGenre, BandTheme) VALUES (@BandName, @BandGenre, @BandTheme)</AddCommand>
+      <UpdateCommand>UPDATE Bands SET BandName = @BandName, BandGenre = @BandGenre, BandTheme = @BandTheme WHERE BandId = @BandId</UpdateCommand>
       <DeleteCommand>DELETE FROM Bands WHERE BandId = @BandId</DeleteCommand>
+      <Columns>
+        <Column name="BandName" label="Band Name" type="string" />
+        <Column name="BandGenre" label="Genre" type="string" />
+        <Column name="BandTheme" label="Theme" type="string" />
+      </Columns>
     </MasterTable>
     <DetailTable>
       <Name>Members</Name>
       <ForeignKeyColumn>BandId</ForeignKeyColumn>
-      <SelectQuery>SELECT * FROM Members WHERE BandId = @MasterId</SelectQuery>
-      <AddCommand>INSERT INTO Members (BandId, MemberName, MemberInstrument) VALUES (@BandId, @MemberName, @Instrument)</AddCommand>
-      <UpdateCommand>UPDATE Members SET MemberName = @MemberName, MemberInstrument = @Instrument WHERE MemberId = @MemberId</UpdateCommand>
+      <PrimaryKeyColumn>MemberId</PrimaryKeyColumn>
+      <SelectQuery>SELECT MemberId, BandId, MemberName, MemberInstrument FROM Members WHERE BandId = @MasterId</SelectQuery>
+      <AddCommand>INSERT INTO Members (BandId, MemberName, MemberInstrument) VALUES (@BandId, @MemberName, @MemberInstrument)</AddCommand>
+      <UpdateCommand>UPDATE Members SET MemberName = @MemberName, MemberInstrument = @MemberInstrument WHERE MemberId = @MemberId</UpdateCommand>
       <DeleteCommand>DELETE FROM Members WHERE MemberId = @MemberId</DeleteCommand>
+      <Columns>
+        <Column name="MemberName" label="Member Name" type="string" />
+        <Column name="MemberInstrument" label="Instrument" type="string" />
+        <Column name="BandId" label="Band ID" type="int" isForeignKey="true" />
+      </Columns>
     </DetailTable>
   </Scenario>
-
+  
+  
   <Scenario name="BandsAndAlbums">
-    <FormCaption>Bands and Their Albums</FormCaption>
+    <FormCaption>Bands and Albums</FormCaption>
     <MasterTable>
       <Name>Bands</Name>
       <PrimaryKeyColumn>BandId</PrimaryKeyColumn>
-      <SelectQuery>SELECT * FROM Bands</SelectQuery>
+      <SelectQuery>SELECT BandId, BandName, BandGenre, BandTheme FROM Bands</SelectQuery>
       <AddCommand>INSERT INTO Bands (BandName, BandGenre, BandTheme) VALUES (@BandName, @BandGenre, @BandTheme)</AddCommand>
       <UpdateCommand>UPDATE Bands SET BandName = @BandName, BandGenre = @BandGenre, BandTheme = @BandTheme WHERE BandId = @BandId</UpdateCommand>
       <DeleteCommand>DELETE FROM Bands WHERE BandId = @BandId</DeleteCommand>
+      <Columns>
+        <Column name="BandName" label="Band Name" type="string" />
+        <Column name="BandGenre" label="Genre" type="string" />
+        <Column name="BandTheme" label="Theme" type="string" />
+      </Columns>
     </MasterTable>
     <DetailTable>
       <Name>Albums</Name>
-      <PrimaryKeyColumn>AlbumId</PrimaryKeyColumn>
       <ForeignKeyColumn>BandId</ForeignKeyColumn>
-      <SelectQuery>SELECT AlbumId, AlbumName, ReleaseDate, Genre FROM Albums WHERE BandId = @MasterId</SelectQuery>
+      <PrimaryKeyColumn>AlbumId</PrimaryKeyColumn>
+      <SelectQuery>SELECT AlbumId, BandId, AlbumName, ReleaseDate, Genre FROM Albums WHERE BandId = @MasterId</SelectQuery>
       <AddCommand>INSERT INTO Albums (BandId, AlbumName, ReleaseDate, Genre) VALUES (@BandId, @AlbumName, @ReleaseDate, @Genre)</AddCommand>
       <UpdateCommand>UPDATE Albums SET AlbumName = @AlbumName, ReleaseDate = @ReleaseDate, Genre = @Genre WHERE AlbumId = @AlbumId</UpdateCommand>
       <DeleteCommand>DELETE FROM Albums WHERE AlbumId = @AlbumId</DeleteCommand>
+      <Columns>
+        <Column name="AlbumName" label="Album Name" type="string" />
+        <Column name="ReleaseDate" label="Release Date" type="date" />
+        <Column name="Genre" label="Genre" type="string" />
+        <Column name="BandId" label="Band ID" type="int" isForeignKey="true" />
+      </Columns>
     </DetailTable>
   </Scenario>
+  
 </Configuration>
