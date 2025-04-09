@@ -40,6 +40,11 @@ namespace lab_1
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
 
+        public string GetCurrentScenarioName()
+        {
+            return currentScenarioName;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             try
@@ -131,6 +136,7 @@ namespace lab_1
                         addMemberButton.Text = "Add New Member";
                         deleteMemberButton.Text = "Delete Member";
                         updateMemberButton.Text = "Update Member";
+                        label2.Text = "Member Operations";
                     }
                     else if (scenarioName == "BandsAndAlbums")
                     {
@@ -138,7 +144,9 @@ namespace lab_1
                         addMemberButton.Text = "Add New Album";
                         deleteMemberButton.Text = "Delete Album";
                         updateMemberButton.Text = "Update Album";
+                        label2.Text = "Album Operations";
                     }
+
                 }
 
                 if (!string.IsNullOrEmpty(masterTableName))
@@ -250,7 +258,9 @@ namespace lab_1
             if (currentScenarioNode != null)
             {
                 string masterTableName = currentScenarioNode.SelectSingleNode("MasterTable")?.SelectSingleNode("Name")?.InnerText;
-                UpdateBandsTableForm form = new UpdateBandsTableForm("add");
+                string addCommandFromConfig = currentScenarioNode.SelectSingleNode("MasterTable")?.SelectSingleNode("AddCommand")?.InnerText;
+                string updateCommandFromConfig = currentScenarioNode.SelectSingleNode("MasterTable")?.SelectSingleNode("UpdateCommand")?.InnerText;
+                UpdateBandsTableForm form = new UpdateBandsTableForm("add", addCommandFromConfig, updateCommandFromConfig);
                 form.Text = $"Add New {masterTableName}";
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -307,7 +317,9 @@ namespace lab_1
                 var bandGenre = selectedRow.Cells[2].Value.ToString();
                 var bandTheme = selectedRow.Cells[3].Value.ToString();
 
-                UpdateBandsTableForm form = new UpdateBandsTableForm("update", bandId, bandName, bandGenre, bandTheme);
+                string updateCommandFromConfig = currentScenarioNode.SelectSingleNode("MasterTable")?.SelectSingleNode("UpdateCommand")?.InnerText;
+
+                UpdateBandsTableForm form = new UpdateBandsTableForm("update", bandId, bandName, bandGenre, bandTheme, updateCommandFromConfig);
                 form.Text = $"Update {masterTableName}";
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -318,17 +330,21 @@ namespace lab_1
 
         private void addMemberButton_Click(object sender, EventArgs e)
         {
-            if (currentScenarioNode != null && dataGridView1.SelectedRows.Count > 0 && currentTable == masterTableName)
+            if (dataGridView1.SelectedRows.Count > 0 && int.TryParse(dataGridView1.SelectedRows[0].Cells["BandId"].Value?.ToString(), out int bandId))
             {
-                DataGridViewRow selectedMasterRow = dataGridView1.SelectedRows[0];
-                var masterId = Convert.ToInt32(selectedMasterRow.Cells[0].Value);
-
-                UpdateMembersTableForm form = new UpdateMembersTableForm("add", masterId);
-                form.Text = $"Add New {detailTableName}";
-                if (form.ShowDialog() == DialogResult.OK)
+                string detailTableNameForForm = (currentScenarioName == "BandsAndMembers") ? "Members" : "Albums";
+                using (UpdateMembersTableForm form = new UpdateMembersTableForm(conn, detailTableNameForForm, "add", null, bandId))
                 {
-                    ShowDetailData(masterId);
+                    form.Owner = this;
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        ShowDetailData(bandId);
+                    }
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please select a Band first.");
             }
         }
 
@@ -341,7 +357,14 @@ namespace lab_1
 
                 using (SqlCommand cmd = new SqlCommand(detailDeleteCommand, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MemberId", primaryKeyValue);
+                    if (currentScenarioName == "BandsAndMembers")
+                    {
+                        cmd.Parameters.AddWithValue("@MemberId", primaryKeyValue);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@AlbumId", primaryKeyValue);
+                    }
 
                     try
                     {
@@ -371,21 +394,30 @@ namespace lab_1
 
         private void updateMemberButton_Click(object sender, EventArgs e)
         {
-            if (currentScenarioNode != null && dataGridView1.SelectedRows.Count > 0 && currentTable == detailTableName)
+            if (dataGridView1.SelectedRows.Count > 0)
             {
-                DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
-
-                var memberId = Convert.ToInt32(selectedRow.Cells[0].Value);
-                var bandId = Convert.ToInt32(selectedRow.Cells[1].Value);
-                var memberName = selectedRow.Cells[2].Value.ToString();
-                var memberInstrument = selectedRow.Cells[3].Value.ToString();
-
-                UpdateMembersTableForm form = new UpdateMembersTableForm("update", memberId, bandId, memberName, memberInstrument);
-                form.Text = $"Update {detailTableName}";
-                if (form.ShowDialog() == DialogResult.OK)
+                DataRowView selectedRow = (DataRowView)dataGridView1.SelectedRows[0].DataBoundItem;
+                string detailTableNameForForm = (currentScenarioName == "BandsAndMembers") ? "Members" : "Albums";
+                string primaryKeyColumn = (currentScenarioName == "BandsAndMembers") ? "MemberId" : "AlbumId";
+                if (int.TryParse(selectedRow[primaryKeyColumn].ToString(), out int recordId))
                 {
-                    ShowDetailData(bandId);
+                    int bandId = -1;
+                    if (int.TryParse(dataGridView1.SelectedRows[0].Cells["BandId"].Value?.ToString(), out bandId))
+                    {
+                        using (UpdateMembersTableForm form = new UpdateMembersTableForm(conn, detailTableNameForForm, "update", recordId, bandId))
+                        {
+                            form.Owner = this;
+                            if (form.ShowDialog() == DialogResult.OK)
+                            {
+                                ShowDetailData(bandId);
+                            }
+                        }
+                    }
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please select a record in the detail table first.");
             }
         }
     }

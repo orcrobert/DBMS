@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
-  
+
   <Scenario name="BandsAndMembers">
     <FormCaption>Bands and Members</FormCaption>
     <MasterTable>
@@ -29,10 +29,11 @@
         <Column name="MemberInstrument" label="Instrument" type="string" />
         <Column name="BandId" label="Band ID" type="int" isForeignKey="true" />
       </Columns>
+      <SelectSingleQuery>SELECT MemberName, MemberInstrument FROM Members WHERE MemberId = @Id</SelectSingleQuery>
     </DetailTable>
   </Scenario>
-  
-  
+
+
   <Scenario name="BandsAndAlbums">
     <FormCaption>Bands and Albums</FormCaption>
     <MasterTable>
@@ -62,7 +63,8 @@
         <Column name="Genre" label="Genre" type="string" />
         <Column name="BandId" label="Band ID" type="int" isForeignKey="true" />
       </Columns>
+      <SelectSingleQuery>SELECT AlbumName, ReleaseDate, Genre FROM Albums WHERE AlbumId = @Id</SelectSingleQuery>
     </DetailTable>
   </Scenario>
-  
+
 </Configuration>
